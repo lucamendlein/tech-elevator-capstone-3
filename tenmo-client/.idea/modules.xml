@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/m02-capstone-client.iml" filepath="$PROJECT_DIR$/m02-capstone-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../tenmo-server/m02-capstone-server.iml" filepath="$PROJECT_DIR$/../tenmo-server/m02-capstone-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../lucamendlein-java-blue/module-2/16_Authentication/lecture-final/server/m02d16-authentication-lecture-server-final.iml" filepath="$PROJECT_DIR$/../../../lucamendlein-java-blue/module-2/16_Authentication/lecture-final/server/m02d16-authentication-lecture-server-final.iml" />
+    </modules>
+  </component>
+</project>
