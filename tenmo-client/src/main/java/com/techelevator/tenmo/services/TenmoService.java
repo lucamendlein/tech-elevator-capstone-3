@@ -11,11 +11,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,6 +27,10 @@ public class TenmoService {
         this.currentUser = currentUser;
     }
 
+    /**
+     * Allows authenticated user to view list of all other users.
+     * @return list of all users with exception of current authenticated user.
+     */
     public List<User> findAllUsers() {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(currentUser.getToken());
@@ -38,6 +40,11 @@ public class TenmoService {
         return Arrays.asList(users);
     }
 
+    /**
+     * Allows authenticated user to view current balance.
+     * @return current balance of authenticated user.
+     * @throws AccountNotFoundException
+     */
     public Account getBalance() throws AccountNotFoundException {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(currentUser.getToken());
@@ -47,6 +54,15 @@ public class TenmoService {
                 HttpMethod.GET, entity, Account.class).getBody();
         return account;
     }
+
+    /**
+     * Allows authenticated user to transfer TEBucks to user of choice.
+     * @param userId - id of user chosen for transfer
+     * @param amount - amount of TEBucks authenticated user selected for transfer
+     * @return completed transfer
+     * @throws TransferNotFoundException
+     * @throws InsufficientFundsException
+     */
     public Transfer sendTransfer(long userId, BigDecimal amount) throws TransferNotFoundException, InsufficientFundsException {
         Transfer transfer = new Transfer();
         transfer.setAmount(amount);
@@ -67,6 +83,12 @@ public class TenmoService {
         HttpEntity<Transfer> entity = new HttpEntity<Transfer>(transfer,headers);
         return entity;
     }
+
+    /**
+     * Allows authenticated user to view list of previous transfers.
+     * @return list of authenticated user's transfers
+     * @throws TransferNotFoundException
+     */
     public List<Transfer> userTransfers() throws TransferNotFoundException {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(currentUser.getToken());
@@ -76,6 +98,13 @@ public class TenmoService {
         return Arrays.asList(transfers);
 
     }
+
+    /**
+     * Allows authenticated user to view transfer details.
+     * @param transferId - id of chosen transfer
+     * @return completed transfer details
+     * @throws TransferNotFoundException
+     */
     public Transfer transferById(long transferId) throws TransferNotFoundException{
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(currentUser.getToken());
@@ -85,6 +114,12 @@ public class TenmoService {
         return transfer;
     }
 
+    /**
+     * Allows authenticated user to view username associated with user from previous transfer.
+     * @param transferId - id of chosen transfer
+     * @return username of chosen user
+     * @throws AccountNotFoundException
+     */
     public String accountToUsernameById(long transferId) throws AccountNotFoundException {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(currentUser.getToken());
@@ -93,28 +128,5 @@ public class TenmoService {
         return username;
     }
 
-
-
-
-//    private HttpEntity<Reservation> makeReservationEntity(Reservation reservation) {
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//        headers.setBearerAuth(AUTH_TOKEN);
-//        HttpEntity<Reservation> entity = new HttpEntity<>(reservation, headers);
-//        return entity;
-//    }
-//    public Reservation updateReservation(String CSV) throws HotelServiceException {
-//    Reservation reservation = makeReservation(CSV);
-//    if (reservation == null) {
-//      throw new HotelServiceException(INVALID_RESERVATION_MSG);
-//    }
-//    try {
-//      restTemplate.exchange(BASE_URL + "reservations/" + reservation.getId(), HttpMethod.PUT,
-//          makeReservationEntity(reservation), Reservation.class);
-//    } catch (RestClientResponseException ex) {
-//      throw new HotelServiceException(ex.getRawStatusCode() + " : " + ex.getResponseBodyAsString());
-//    }
-//    return reservation;
-//  }
 
 }
